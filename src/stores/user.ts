@@ -10,67 +10,128 @@ interface User {
     code: string
     department?: string
     table?: string
+    inQueue?:boolean
     tables?: { id: number; name: string; code: string; worker_id?: number }[]
 }
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: JSON.parse(localStorage.getItem('user') || 'null') as User | null,
-        isAuthorized: false,
+        isAuthorized: localStorage.getItem('badge') !== null,
         badgeCode: localStorage.getItem('badge') || '',
         inQueue: false,
+        isLoading: false,
     }),
     actions: {
         async checkAuth() {
             if (!this.badgeCode) return
             try {
-                await axios.post(`${API_URL}/api/worker/v1.0/ping`, {}, {
+                this.setLoading(true);
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/auth`, {}, {
                     headers: { 'badge-code': this.badgeCode },
                 })
+                this.setLoading(false);
+                if(res.data.data){
+                    this.setUser(res.data.data);
+                    localStorage.setItem('badge', this.badgeCode);
+                }
                 this.isAuthorized = true
                 const localUser = localStorage.getItem('user')
                 if (localUser) this.user = JSON.parse(localUser)
-            } catch {
+            } catch (e:any){
                 this.isAuthorized = false
                 this.user = null
+                this.setLoading(false);
+
+                this.showError(e?.response?.data?.message);
             }
         },
-        async auth() {
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/auth`, {}, {
-                headers: { 'badge-code': this.badgeCode },
-            })
-            this.user = res.data
-            localStorage.setItem('user', JSON.stringify(this.user))
-        },
         async updateName(name: string) {
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/update`, { name }, {
-                headers: { 'badge-code': this.badgeCode },
-            })
-            this.user = res.data
-            localStorage.setItem('user', JSON.stringify(this.user))
+            try{
+                this.setLoading(true);
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/update`, { name }, {
+                    headers: { 'badge-code': this.badgeCode },
+                })
+                this.setLoading(false);
+                if(res.data.data){
+                    this.setUser(res.data.data);
+                }
+            }
+            catch (e: any){
+                this.showError(e?.response?.data?.message);
+                this.setLoading(false);
+            }
         },
         async selectTable(table_id: number) {
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/select-table`, { table_id }, {
-                headers: { 'badge-code': this.badgeCode },
-            })
-            this.user = res.data
-            localStorage.setItem('user', JSON.stringify(this.user))
+            try{
+                this.setLoading(true);
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/select-table`, { table_id }, {
+                    headers: { 'badge-code': this.badgeCode },
+                })
+                this.setLoading(false);
+                if(res.data.data){
+                    this.setUser(res.data.data);
+                }
+            }
+            catch (e: any){
+                this.setLoading(false);
+                this.showError(e?.response?.data?.message);
+            }
         },
         setBadge(code: string) {
             this.badgeCode = code
-            localStorage.setItem('badge', code)
         },
         async enterQueue() {
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/enter-queue`, { }, {
-                headers: { 'badge-code': this.badgeCode },
-            })
-            this.inQueue = true
+            try {
+                this.setLoading(true);
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/enter-queue`, { }, {
+                    headers: { 'badge-code': this.badgeCode },
+                })
+                await this.timeout(3000);
+                this.setLoading(false);
+                if(res.data.data){
+                    this.setUser(res.data.data);
+                }
+            }
+            catch (e: any){
+                this.showError(e?.response?.data?.message);
+                this.setLoading(false);
+            }
         },
         async receiveItem() {
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, { }, {
-                headers: { 'badge-code': this.badgeCode },
-            })
-            this.inQueue = false
+            try {
+                this.setLoading(true);
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, { }, {
+                    headers: { 'badge-code': this.badgeCode },
+                })
+                this.setLoading(false);
+                if(res.data.data){
+                    this.setUser(res.data.data);
+                }
+            }
+            catch (e: any){
+                this.showError(e?.response?.data?.message);
+                this.setLoading(false);
+            }
+        },
+        setUser(user: User) {
+            localStorage.setItem('user', JSON.stringify(user))
+            this.inQueue = !!user.inQueue
+            this.user = user
+
+        },
+        showError(message?: string) {
+            if(!message) {
+                return;
+            }
+
+            console.log(message);
+        },
+        setLoading(isLoading: boolean) {
+            this.isLoading = isLoading;
+        },
+        timeout(ms: number) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
     }
 })

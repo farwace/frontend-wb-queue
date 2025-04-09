@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h2>Ожидание товара</h2>
-    <button @click="store.enterQueue">Заказать товар</button>
+    <h2>Рабочее место <b>{{ store.$state.user?.name }}</b></h2>
+    <h2>{{store.$state.user?.table}}</h2>
+    <button :disabled="store.$state.isLoading" class="big-button" @click="store.enterQueue">🛎 Заказать товар 🛎</button>
   </div>
 </template>
 

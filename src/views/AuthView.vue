@@ -16,6 +16,6 @@ const badge = ref('')
 const submit = async () => {
   store.setBadge(badge.value)
   await store.checkAuth()
-  if (!store.user) await store.auth()
+  // if (!store.user) await store.auth()
 }
 </script>
