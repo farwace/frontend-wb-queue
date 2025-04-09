@@ -1,47 +1,36 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="app">
+    <component :is="currentComponent" />
+  </div>
 </template>
 
+<script lang="ts" setup>
+import { computed, onMounted } from 'vue'
+import { useUserStore } from './stores/user'
+import AuthView from './views/AuthView.vue'
+import EnterNameView from './views/EnterNameView.vue'
+import SelectTableView from './views/SelectTableView.vue'
+import QueueView from './views/QueueView.vue'
+import ReceivedView from './views/ReceivedView.vue'
+
+const store = useUserStore()
+
+onMounted(() => {
+  store.checkAuth()
+})
+
+const currentComponent = computed(() => {
+  if (!store.isAuthorized) return AuthView
+  if (!store.user?.name) return EnterNameView
+  if (!store.user?.table) return SelectTableView
+  return store.inQueue ? ReceivedView : QueueView
+})
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app {
+  font-size: 1.5rem;
+  padding: 2rem;
+  font-family: sans-serif;
 }
 </style>
