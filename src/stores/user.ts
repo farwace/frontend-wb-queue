@@ -23,6 +23,7 @@ export const useUserStore = defineStore('user', {
         badgeCode: localStorage.getItem('badge') || '',
         inQueue: false,
         isLoading: false,
+        isSpectatorMode: (localStorage.getItem('isSpectatorMode') === '1'),
     }),
     actions: {
         async checkAuth() {
@@ -123,11 +124,27 @@ export const useUserStore = defineStore('user', {
             })
             this.setLoading(false);
         },
+        async getQueue(){
+            try {
+                this.setLoading(true);
+                const res = await axios.get(`${API_URL}/api/worker/v1.0/queue`, {})
+                this.setLoading(false);
+                return res;
+            }
+            catch (e:any){
+                this.showError(e?.response?.data?.message);
+                this.setLoading(false);
+            }
+        },
         setUser(user: User) {
             localStorage.setItem('user', JSON.stringify(user))
             this.inQueue = !!user.inQueue
             this.user = user
 
+        },
+        toggleSpectatorMode(){
+            this.isSpectatorMode = !this.isSpectatorMode;
+            localStorage.setItem('isSpectatorMode', this.isSpectatorMode ? '1' : '0');
         },
         showError(message?: string) {
             if(!message) {

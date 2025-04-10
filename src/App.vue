@@ -3,6 +3,9 @@
     <div v-if="store.$state.isAuthorized" @click="clearStore" class="logout-btn">
       Выйти
     </div>
+    <div v-if="!store.$state.isAuthorized" @click="store.toggleSpectatorMode()" class="logout-btn">
+      {{ isSpectatorMode ? 'Выйти' : 'Смотреть очередь' }}
+    </div>
     <div class="loading" v-if="store.isLoading">
       <div class="loading__inner">
         <loading-spinner/>
@@ -16,6 +19,7 @@
 import {computed, onMounted, watch} from 'vue'
 import { useUserStore } from './stores/user'
 import AuthView from './views/AuthView.vue'
+import SpectatorView from './views/Spectator.vue'
 import EnterNameView from './views/EnterNameView.vue'
 import SelectTableView from './views/SelectTableView.vue'
 import QueueView from './views/QueueView.vue'
@@ -25,13 +29,14 @@ import LoadingSpinner from "@/components/icons/LoadingSpinner.vue";
 
 const store = useUserStore()
 
-const { isAuthorized, user, inQueue } = storeToRefs(useUserStore())
+const { isAuthorized, user, inQueue, isSpectatorMode } = storeToRefs(useUserStore())
 
 onMounted(() => {
   store.checkAuth()
 })
 
 const currentComponent = computed(() => {
+  if( isSpectatorMode.value) {return SpectatorView}
   if (!isAuthorized.value) return AuthView
   if (!user.value?.name) return EnterNameView
   if (!user.value?.table) return SelectTableView
