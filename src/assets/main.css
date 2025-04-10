@@ -1,4 +1,15 @@
 @import './base.css';
+
+.iziToast-capsule .iziToast{
+  border-radius: 1rem!important;
+}
+button.iziToast-close{
+  margin: unset;
+}
+.iziToast>.iziToast-progressbar{
+  margin: 0 10px 0 10px;
+  width: calc(100% - 20px)!important;
+}
 body {
   margin: 0;
   padding: 0;

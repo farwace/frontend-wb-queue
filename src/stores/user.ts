@@ -2,6 +2,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+import iziToast from "izitoast";
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost'
 
 interface User {
@@ -124,7 +126,11 @@ export const useUserStore = defineStore('user', {
             if(!message) {
                 return;
             }
-
+            iziToast.error({
+                message: message,
+                timeout: 3000,
+                position: "center"
+            })
             console.log(message);
         },
         setLoading(isLoading: boolean) {
