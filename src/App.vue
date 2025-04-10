@@ -38,10 +38,19 @@ const currentComponent = computed(() => {
   return inQueue.value ? ReceivedView : QueueView
 })
 
-const clearStore = () => {
-  localStorage.removeItem('user')
-  localStorage.removeItem('badge')
-  window.location.reload()
+const clearStore = async () => {
+  try{
+    await store.logout();
+    localStorage.removeItem('user')
+    localStorage.removeItem('badge')
+    window.location.reload()
+  }
+  catch (error) {
+    store.$patch({
+      isLoading: false,
+    });
+    store.showError('Непредвиденная ошибка. Попробуйте еще раз');
+  }
 }
 </script>
 

@@ -116,6 +116,13 @@ export const useUserStore = defineStore('user', {
                 this.setLoading(false);
             }
         },
+        async logout(){
+            this.setLoading(true);
+            const res = await axios.post(`${API_URL}/api/worker/v1.0/leave-table`, { }, {
+                headers: { 'badge-code': this.badgeCode },
+            })
+            this.setLoading(false);
+        },
         setUser(user: User) {
             localStorage.setItem('user', JSON.stringify(user))
             this.inQueue = !!user.inQueue
