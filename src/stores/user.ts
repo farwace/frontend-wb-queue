@@ -89,7 +89,7 @@ export const useUserStore = defineStore('user', {
                 const res = await axios.post(`${API_URL}/api/worker/v1.0/enter-queue`, { }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
-                await this.timeout(3000);
+                //await this.timeout(3000);
                 this.setLoading(false);
                 if(res.data.data){
                     this.setUser(res.data.data);
