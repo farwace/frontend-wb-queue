@@ -71,8 +71,8 @@ onMounted(() => {
   store.getQueue().then((queue) => {
     if((queue?.data?.data?.length || 0) > 0){
       items.value = queue?.data?.data as unknown as TQueue[]
-      isReady.value = true;
     }
+    isReady.value = true;
   });
 });
 
