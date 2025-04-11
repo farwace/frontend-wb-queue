@@ -16,23 +16,41 @@
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue'
 import { useUserStore } from '../stores/user'
+import echo from "./../echo";
 
 const store = useUserStore()
 
 type TQueue = {
   id: number
   isClosed: boolean
-  tableCode: string
-  tableName: string
-  workerName: string
+  tableCode?: string
+  tableName?: string
+  workerName?: string
 }
 
 const items = ref<TQueue[]>([]);
+const isReady = ref<boolean>(false);
+
+
+echo.channel('orders')
+    .listen('.order.requested', (queue: any) => {
+      console.log(queue);
+      if(isReady.value) {
+        items.value = items.value.filter(item => item.id !== queue.id);
+        if(!queue.isClosed){
+          items.value.unshift(queue);
+        }
+      }
+    });
+
+
 
 onMounted(() => {
+
   store.getQueue().then((queue) => {
     if((queue?.data?.data?.length || 0) > 0){
       items.value = queue?.data?.data as unknown as TQueue[]
+      isReady.value = true;
     }
   });
 })
@@ -42,7 +60,7 @@ onMounted(() => {
 <style scoped>
 .queue{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
 }
 
@@ -51,5 +69,6 @@ onMounted(() => {
   border: 1px solid var(--color-border);
   padding: 2rem;
   text-align: center;
+  font-size: 3rem;
 }
 </style>
