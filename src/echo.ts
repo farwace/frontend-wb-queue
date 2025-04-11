@@ -16,7 +16,7 @@ const echo = new Echo({
     wsPort: Number(import.meta.env.VITE_REVERB_PORT),
     forceTLS: import.meta.env.VITE_REVERB_TLS === 'true',
     disableStats: true,
-    enabledTransports: ['ws'],
+    enabledTransports: ['ws', 'wss'],
 
 });
 
