@@ -5,6 +5,7 @@ import axios from 'axios'
 import iziToast from "izitoast";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost'
+const IS_SPECTATOR_ENABLED = import.meta.env.VITE_ENABLE_QUEUE == 'true'
 
 interface User {
     id: number
@@ -23,7 +24,7 @@ export const useUserStore = defineStore('user', {
         badgeCode: localStorage.getItem('badge') || '',
         inQueue: false,
         isLoading: false,
-        isSpectatorMode: (localStorage.getItem('isSpectatorMode') === '1'),
+        isSpectatorMode: IS_SPECTATOR_ENABLED,
     }),
     actions: {
         async checkAuth() {
@@ -141,10 +142,6 @@ export const useUserStore = defineStore('user', {
             this.inQueue = !!user.inQueue
             this.user = user
 
-        },
-        toggleSpectatorMode(){
-            this.isSpectatorMode = !this.isSpectatorMode;
-            localStorage.setItem('isSpectatorMode', this.isSpectatorMode ? '1' : '0');
         },
         showError(message?: string) {
             if(!message) {

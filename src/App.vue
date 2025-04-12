@@ -3,9 +3,6 @@
     <div v-if="store.$state.isAuthorized" @click="clearStore" class="logout-btn">
       Выйти
     </div>
-    <div v-if="!store.$state.isAuthorized" @click="store.toggleSpectatorMode()" class="logout-btn">
-      {{ isSpectatorMode ? 'Выйти' : 'Смотреть очередь' }}
-    </div>
     <div class="loading" v-if="store.isLoading">
       <div class="loading__inner">
         <loading-spinner/>
