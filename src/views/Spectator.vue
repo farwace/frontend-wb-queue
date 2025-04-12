@@ -5,7 +5,10 @@
     <div class="queue">
       <template v-for="item in items" :key="item.id">
         <div class="item" v-if="!item.isClosed">
-          {{ item.tableName }}
+          <div>
+            {{ item.tableName }}
+          </div>
+          <div>{{ formatDuration(item.timestamp!, currentTime) }}</div>
         </div>
       </template>
     </div>
@@ -47,8 +50,10 @@ type TQueue = {
   tableCode?: string
   tableName?: string
   workerName?: string
+  timestamp?: Date
 }
-
+let interval: ReturnType<typeof setInterval>
+const currentTime = ref(new Date())
 const items = ref<TQueue[]>([]);
 const isReady = ref<boolean>(false);
 
@@ -59,7 +64,11 @@ echo.channel('orders')
       if(isReady.value) {
         items.value = items.value.filter(item => item.id !== queue.id);
         if(!queue.isClosed){
-          items.value.unshift(queue);
+          if(queue.timestamp){
+            queue.timestamp = new Date(queue.timestamp);
+          }
+
+          items.value.push(queue);
         }
       }
     });
@@ -67,10 +76,18 @@ echo.channel('orders')
 
 
 onMounted(() => {
+  interval = setInterval(() => {
+    currentTime.value = new Date()
+  }, 1000)
 
   store.getQueue().then((queue) => {
     if((queue?.data?.data?.length || 0) > 0){
-      items.value = queue?.data?.data as unknown as TQueue[]
+      items.value = (queue?.data?.data as unknown as TQueue[]).map((item) => {
+        if(item.timestamp){
+          item.timestamp = new Date(item.timestamp);
+        }
+        return item;
+      })
     }
     isReady.value = true;
   });
@@ -78,7 +95,18 @@ onMounted(() => {
 
 onUnmounted(() => {
   echo.disconnect();
+  clearInterval(interval);
 })
+
+const formatDuration = (from: Date, to: Date): string => {
+  const diff = Math.floor((to.getTime() - from.getTime()) / 1000)
+  const hours = Math.floor(diff / 3600)
+  const minutes = Math.floor((diff % 3600) / 60)
+  const seconds = diff % 60
+
+  const pad = (n: number) => n.toString().padStart(2, '0')
+  return diff > 0 ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : '00:00:00'
+}
 
 </script>
 
