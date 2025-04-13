@@ -31,6 +31,8 @@ declare global {
   }
 }
 
+const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e1';
+
 window.Pusher = Pusher;
 
 const echo = new Echo({
@@ -64,7 +66,7 @@ const isReady = ref<boolean>(false);
 
 
 echo.channel('orders')
-    .listen('.order.requested', (queue: any) => {
+    .listen(`.order.requested.${DIRECTION_CODE}`, (queue: any) => {
       console.log(queue);
       if(isReady.value) {
         items.value = items.value.filter(item => item.id !== queue.id);

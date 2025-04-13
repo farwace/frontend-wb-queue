@@ -6,6 +6,7 @@ import iziToast from "izitoast";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost'
 const IS_SPECTATOR_ENABLED = import.meta.env.VITE_ENABLE_QUEUE == 'true'
+const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e1'
 
 interface User {
     id: number
@@ -31,7 +32,9 @@ export const useUserStore = defineStore('user', {
             if (!this.badgeCode) return
             try {
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/auth`, {}, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/auth`, {
+                    direction: DIRECTION_CODE
+                }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 this.setLoading(false);
@@ -53,7 +56,7 @@ export const useUserStore = defineStore('user', {
         async updateName(name: string) {
             try{
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/update`, { name }, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/update`, { name: name, direction: DIRECTION_CODE }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 this.setLoading(false);
@@ -69,7 +72,7 @@ export const useUserStore = defineStore('user', {
         async selectTable(table_id: number) {
             try{
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/select-table`, { table_id }, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/select-table`, { table_id: table_id, direction: DIRECTION_CODE }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 this.setLoading(false);
@@ -88,7 +91,7 @@ export const useUserStore = defineStore('user', {
         async enterQueue() {
             try {
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/enter-queue`, { }, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/enter-queue`, { direction: DIRECTION_CODE }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 //await this.timeout(3000);
@@ -105,7 +108,7 @@ export const useUserStore = defineStore('user', {
         async receiveItem() {
             try {
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, { }, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, { direction: DIRECTION_CODE }, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 this.setLoading(false);
@@ -120,7 +123,7 @@ export const useUserStore = defineStore('user', {
         },
         async logout(){
             this.setLoading(true);
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/leave-table`, { }, {
+            const res = await axios.post(`${API_URL}/api/worker/v1.0/leave-table`, { direction: DIRECTION_CODE }, {
                 headers: { 'badge-code': this.badgeCode },
             })
             this.setLoading(false);
@@ -128,7 +131,7 @@ export const useUserStore = defineStore('user', {
         async getQueue(){
             try {
                 this.setLoading(true);
-                const res = await axios.get(`${API_URL}/api/worker/v1.0/queue`, {})
+                const res = await axios.get(`${API_URL}/api/worker/v1.0/queue/${DIRECTION_CODE}`, { })
                 this.setLoading(false);
                 return res;
             }
