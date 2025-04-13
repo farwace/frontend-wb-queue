@@ -1,6 +1,7 @@
 <template>
   <div class="app">
-    <div v-if="store.$state.isAuthorized" @click="clearStore" class="logout-btn">
+    <Confirm v-if="confirmLogout" :message="'Вы действительно хотите покинуть рабочее место?'" :title="'Покинуть рабочее место'" @accept="logout" @cancel="confirmLogout = false"/>
+    <div v-if="store.$state.isAuthorized" @click="tryLogout" class="logout-btn">
       Выйти
     </div>
     <div class="loading" v-if="store.isLoading">
@@ -13,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import { useUserStore } from './stores/user'
 import AuthView from './views/AuthView.vue'
 import SpectatorView from './views/Spectator.vue'
@@ -21,10 +22,14 @@ import EnterNameView from './views/EnterNameView.vue'
 import SelectTableView from './views/SelectTableView.vue'
 import QueueView from './views/QueueView.vue'
 import ReceivedView from './views/ReceivedView.vue'
+import Confirm from './components/Confirm.vue'
+
 import {storeToRefs} from "pinia";
 import LoadingSpinner from "@/components/icons/LoadingSpinner.vue";
 
 const store = useUserStore()
+
+const confirmLogout = ref<boolean>(false);
 
 const { isAuthorized, user, inQueue, isSpectatorMode } = storeToRefs(useUserStore())
 
@@ -40,7 +45,12 @@ const currentComponent = computed(() => {
   return inQueue.value ? ReceivedView : QueueView
 })
 
-const clearStore = async () => {
+const tryLogout = () => {
+  confirmLogout.value = true;
+}
+
+const logout = async () => {
+  confirmLogout.value = false;
   try{
     await store.logout();
     localStorage.removeItem('user')
