@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Очередь столиков</h2>
+    <h2>Очередь столов</h2>
 
     <div class="queue">
       <template v-for="item in items" :key="item.id">

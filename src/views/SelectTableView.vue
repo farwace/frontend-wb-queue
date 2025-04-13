@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{ user?.name ? (user.name + ', ') : '' }} Выберите столик</h2>
+    <h2>{{ user?.name ? (user.name + ', ') : '' }} Выберите стол</h2>
     <ul>
       <li v-for="t in store.user?.tables" :key="t.id">
         <button @click="select(t.id)">{{ t.name }}</button>
