@@ -5,10 +5,13 @@
     <div class="queue">
       <template v-for="item in items" :key="item.id">
         <div class="item" v-if="!item.isClosed">
-          <div>
-            {{ item.tableName }}
+          <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
+          <div class="item-body">
+            <div>
+              {{ item.tableName }}
+            </div>
+            <div>{{ formatDuration(item.timestamp!, currentTime) }}</div>
           </div>
-          <div>{{ formatDuration(item.timestamp!, currentTime) }}</div>
         </div>
       </template>
     </div>
@@ -50,8 +53,10 @@ type TQueue = {
   tableCode?: string
   tableName?: string
   workerName?: string
-  timestamp?: Date
+  timestamp?: Date,
+  color?: string
 }
+
 let interval: ReturnType<typeof setInterval>
 const currentTime = ref(new Date())
 const items = ref<TQueue[]>([]);
@@ -123,5 +128,21 @@ const formatDuration = (from: Date, to: Date): string => {
   padding: 2rem;
   text-align: center;
   font-size: 3rem;
+  position: relative;
+}
+.item-bg{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 1rem;
+  z-index: 1;
+  opacity: .3;
+}
+
+.item-body{
+  position: relative;
+  z-index: 2;
 }
 </style>
