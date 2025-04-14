@@ -8,6 +8,9 @@
           <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
           <div class="item-body">
             <div>
+              &nbsp;{{ item.name }}&nbsp;
+            </div>
+            <div>
               {{ item.tableName }}
             </div>
             <div>{{ formatDuration(item.timestamp!, currentTime) }}</div>
@@ -56,7 +59,8 @@ type TQueue = {
   tableName?: string
   workerName?: string
   timestamp?: Date,
-  color?: string
+  color?: string,
+  name?:string
 }
 
 let interval: ReturnType<typeof setInterval>
