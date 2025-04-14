@@ -4,7 +4,7 @@
 
     <div class="queue">
       <template v-for="item in items" :key="item.id">
-        <div class="item" v-if="!item.isClosed">
+        <div class="item" v-if="!item.isClosed" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
           <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
           <div class="item-body">
             <div>
@@ -13,7 +13,7 @@
             <div>
               {{ item.tableName }}
             </div>
-            <div>{{ formatDuration(item.timestamp!, currentTime) }}</div>
+            <div>{{ formatDuration(item.timestamp!, currentTime).strVal }}</div>
           </div>
         </div>
       </template>
@@ -109,14 +109,17 @@ onUnmounted(() => {
   clearInterval(interval);
 })
 
-const formatDuration = (from: Date, to: Date): string => {
+const formatDuration = (from: Date, to: Date): { strVal: string, val: number } => {
   const diff = Math.floor((to.getTime() - from.getTime()) / 1000)
   const hours = Math.floor(diff / 3600)
   const minutes = Math.floor((diff % 3600) / 60)
   const seconds = diff % 60
 
   const pad = (n: number) => n.toString().padStart(2, '0')
-  return diff > 0 ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : '00:00:00'
+  return {
+    strVal: diff > 0 ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : '00:00:00',
+    val: diff
+  }
 }
 
 </script>
@@ -150,5 +153,18 @@ const formatDuration = (from: Date, to: Date): string => {
 .item-body{
   position: relative;
   z-index: 2;
+}
+
+.item.flash .item-bg{
+  animation: flashAnimation 2s ease-in-out infinite;
+}
+
+@keyframes flashAnimation {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: .3;
+  }
 }
 </style>
