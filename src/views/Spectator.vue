@@ -133,7 +133,7 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
 
 .queue .item{
   border-radius: 1rem;
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   padding: 2rem;
   text-align: center;
   font-size: 3rem;
@@ -155,6 +155,9 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   z-index: 2;
 }
 
+.item.flash{
+  animation: flashBorderAnimation 1s ease-in-out infinite;
+}
 .item.flash .item-bg{
   animation: flashAnimation 2s ease-in-out infinite;
 }
@@ -167,4 +170,13 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
     opacity: .3;
   }
 }
+@keyframes flashBorderAnimation {
+  0%, 100% {
+    border-color: rgba(255, 0, 0, 1);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 0.1);
+  }
+}
+
 </style>
