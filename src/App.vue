@@ -2,7 +2,7 @@
   <div class="app">
     <Confirm v-if="confirmLogout" :message="t('askLogout')" :title="t('logoutTitle')" @accept="logout" @cancel="confirmLogout = false"/>
     <div v-if="!isSpectatorMode">
-      <select style="font-size: 1.5rem; text-transform: uppercase" @change="changeLang($event?.target?.value)">
+      <select style="font-size: 1.5rem; text-transform: uppercase" @change="changeLang(($event?.target as any)?.value)">
         <option :value="locale" selected>{{ locale }}</option>
         <option v-for="loc in availableLocales" :key="'locale-'+loc" :value="loc">{{loc}}</option>
       </select>
