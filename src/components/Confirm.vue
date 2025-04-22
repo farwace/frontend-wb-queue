@@ -9,14 +9,16 @@
           {{ message }}
         </div>
         <div class="modal-buttons">
-          <button type="button" @click="emits('cancel')">Отменить</button>
-          <button type="button" @click="emits('accept')">Принять</button>
+          <button type="button" @click="emits('cancel')">{{ t('cancel') }}</button>
+          <button type="button" @click="emits('accept')">{{t('apply')}}</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import {useI18n} from "vue-i18n";
+
 const emits = defineEmits([
     'accept',
     'cancel'
@@ -25,6 +27,8 @@ const props = defineProps<{
   title?:string,
   message?:string,
 }>();
+
+const {t} = useI18n();
 
 </script>
 

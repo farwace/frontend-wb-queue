@@ -2,12 +2,12 @@
   <div>
     <Confirm
         v-if="confirmSelect"
-        :title="'Подтвердите выбор'"
-        :message="'Вы действительно хотите занять стол ' + confirmSelectTableName + '?'"
+        :title="t('confirmSelect')"
+        :message="t('confirmTable') + confirmSelectTableName + '?'"
         @accept="applySelect(confirmSelectTableId)"
         @cancel="confirmSelect = false;"
     />
-    <h2>{{ user?.name ? (user.name + ', ') : '' }} Выберите стол</h2>
+    <h2>{{ user?.name ? (user.name + ', ') : '' }} {{t('selectTable')}}</h2>
     <ul>
       <li v-for="t in store.user?.tables" :key="t.id">
         <button @click="select(t.id, t.name)">{{ t.name }}</button>
@@ -21,6 +21,7 @@ import { useUserStore } from '../stores/user'
 import {storeToRefs} from "pinia";
 import {ref} from "vue";
 import Confirm from "@/components/Confirm.vue";
+import {useI18n} from "vue-i18n";
 
 const { user } = storeToRefs(useUserStore());
 
@@ -43,4 +44,6 @@ const applySelect = async (id?: number) => {
     await store.selectTable(id)
   }
 }
+
+const {t, locale} = useI18n();
 </script>
