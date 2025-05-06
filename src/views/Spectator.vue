@@ -3,8 +3,8 @@
     <h2>Очередь столов</h2>
 
     <div class="queue">
-      <template v-for="item in items" :key="item.id">
-        <div class="item" v-if="!item.isClosed" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
+      <template v-for="(item, index) in items" :key="item.id">
+        <div class="item" v-if="!item.isClosed && index < 4" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
           <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
           <div class="item-body">
             <div>
