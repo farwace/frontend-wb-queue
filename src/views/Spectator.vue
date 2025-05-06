@@ -102,6 +102,10 @@ onMounted(() => {
     }
     isReady.value = true;
   });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 10000)
 });
 
 onUnmounted(() => {
