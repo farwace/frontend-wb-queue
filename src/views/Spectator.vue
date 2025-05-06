@@ -84,14 +84,9 @@ echo.channel('orders')
       }
     });
 
-
-
-onMounted(() => {
-  interval = setInterval(() => {
-    currentTime.value = new Date()
-  }, 1000)
-
+const longPoolReload = () => {
   store.getQueue().then((queue) => {
+    items.value = [];
     if((queue?.data?.data?.length || 0) > 0){
       items.value = (queue?.data?.data as unknown as TQueue[]).map((item) => {
         if(item.timestamp){
@@ -102,10 +97,18 @@ onMounted(() => {
     }
     isReady.value = true;
   });
+}
 
-  setTimeout(() => {
-    window.location.reload();
-  }, 10000)
+onMounted(() => {
+  interval = setInterval(() => {
+    currentTime.value = new Date()
+  }, 1000)
+
+  longPoolReload();
+
+  setInterval(() => {
+    longPoolReload();
+  }, 30000)
 });
 
 onUnmounted(() => {
