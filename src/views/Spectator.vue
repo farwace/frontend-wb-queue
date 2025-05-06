@@ -84,8 +84,8 @@ echo.channel('orders')
       }
     });
 
-const longPoolReload = () => {
-  store.getQueue().then((queue) => {
+const longPoolReload = (setLoading = true) => {
+  store.getQueue(setLoading).then((queue) => {
     items.value = [];
     if((queue?.data?.data?.length || 0) > 0){
       items.value = (queue?.data?.data as unknown as TQueue[]).map((item) => {
@@ -107,8 +107,8 @@ onMounted(() => {
   longPoolReload();
 
   setInterval(() => {
-    longPoolReload();
-  }, 30000)
+    longPoolReload(false);
+  }, 10000)
 });
 
 onUnmounted(() => {

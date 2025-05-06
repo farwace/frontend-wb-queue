@@ -128,9 +128,11 @@ export const useUserStore = defineStore('user', {
             })
             this.setLoading(false);
         },
-        async getQueue(){
+        async getQueue(setLoading = true){
             try {
-                this.setLoading(true);
+                if(setLoading){
+                    this.setLoading(true);
+                }
                 const res = await axios.get(`${API_URL}/api/worker/v1.0/queue/${DIRECTION_CODE}`, { })
                 this.setLoading(false);
                 return res;
