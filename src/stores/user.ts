@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', {
                 this.user = null
                 this.setLoading(false);
 
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
             }
         },
         async updateName(name: string) {
@@ -65,7 +65,7 @@ export const useUserStore = defineStore('user', {
                 }
             }
             catch (e: any){
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
             }
         },
@@ -82,7 +82,7 @@ export const useUserStore = defineStore('user', {
             }
             catch (e: any){
                 this.setLoading(false);
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
             }
         },
         setBadge(code: string) {
@@ -101,7 +101,7 @@ export const useUserStore = defineStore('user', {
                 }
             }
             catch (e: any){
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
             }
         },
@@ -117,7 +117,7 @@ export const useUserStore = defineStore('user', {
                 }
             }
             catch (e: any){
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
             }
         },
@@ -138,7 +138,7 @@ export const useUserStore = defineStore('user', {
                 return res;
             }
             catch (e:any){
-                this.showError(e?.response?.data?.message);
+                this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
             }
         },
@@ -148,7 +148,7 @@ export const useUserStore = defineStore('user', {
             this.user = user
 
         },
-        showError(message?: string) {
+        showError(message?: string, status ?: number) {
             if(!message) {
                 return;
             }
@@ -158,6 +158,11 @@ export const useUserStore = defineStore('user', {
                 position: "center"
             })
             console.log(message);
+            if(status === 403){
+                setTimeout(()=>{
+                    window.location.reload();
+                }, 1500)
+            }
         },
         setLoading(isLoading: boolean) {
             this.isLoading = isLoading;
