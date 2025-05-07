@@ -134,7 +134,7 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
 <style scoped>
 .queue{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
@@ -143,7 +143,8 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   border: 2px solid var(--color-border);
   padding: 2rem;
   text-align: center;
-  font-size: 3rem;
+  font-size: 5rem;
+  line-height: 6.5rem;
   position: relative;
 }
 .item-bg{
