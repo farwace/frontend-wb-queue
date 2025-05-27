@@ -1,6 +1,7 @@
 // stores/user.ts
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import type {AxiosResponse} from 'axios'
 
 import iziToast from "izitoast";
 
@@ -141,6 +142,9 @@ export const useUserStore = defineStore('user', {
                 this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
             }
+        },
+        async getTablesCnt(): Promise<AxiosResponse<number>> {
+            return axios.get(`${API_URL}/api/worker/v1.0/department-tables-length/${DIRECTION_CODE}`, {});
         },
         setUser(user: User) {
             localStorage.setItem('user', JSON.stringify(user))

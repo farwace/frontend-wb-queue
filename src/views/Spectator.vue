@@ -2,9 +2,9 @@
   <div>
     <h2>Очередь столов</h2>
 
-    <div class="queue">
+    <div class="queue" :class="['items-' + tablesCnt]">
       <template v-for="(item, index) in items" :key="item.id">
-        <div class="item" v-if="!item.isClosed && index < 4" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
+        <div class="item" v-if="!item.isClosed && index < tablesCnt" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
           <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
           <div class="item-body">
             <div>
@@ -33,6 +33,7 @@ declare global {
     Pusher?: typeof Pusher;
   }
 }
+const tablesCnt = ref<number>(4);
 
 const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e1';
 
@@ -99,12 +100,23 @@ const longPoolReload = (setLoading = true) => {
   });
 }
 
+const updateTablesCnt = async () => {
+  try{
+    const {data: neoCnt} = await store.getTablesCnt();
+    if(neoCnt > tablesCnt.value){
+      tablesCnt.value = neoCnt;
+    }
+  }
+  catch (e){}
+}
+
 onMounted(() => {
   interval = setInterval(() => {
     currentTime.value = new Date()
   }, 1000)
 
   longPoolReload();
+  updateTablesCnt();
 
   setInterval(() => {
     longPoolReload(false);
