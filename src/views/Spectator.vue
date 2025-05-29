@@ -149,7 +149,9 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
-
+.queue.items-6{
+  grid-template-columns: 1fr 1fr 1fr;
+}
 .queue .item{
   border-radius: 1rem;
   border: 2px solid var(--color-border);
@@ -202,9 +204,6 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
 @media(max-height: 800px) and (max-width: 1200px){
   .queue{
     gap: 0.5rem;
-  }
-  .queue.items-6{
-    grid-template-columns: 1fr 1fr 1fr;
   }
   .queue .item{
     padding: 0.5rem;
