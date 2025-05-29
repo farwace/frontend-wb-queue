@@ -201,6 +201,68 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   }
 }
 
+@media(max-width: 1480px){
+  .queue.items-6{
+    gap: 0.5rem
+  }
+}
+
+@media(max-width: 1420px){
+  .queue.items-6 .item{
+    padding: 0.5rem;
+    font-size: 4rem;
+    line-height: 4.5rem;
+  }
+}
+
+@media(max-width: 1250px){
+  .queue.items-6 .item{
+    font-size: 3rem;
+    line-height: 3.5rem;
+  }
+}
+
+@media(max-width: 1000px){
+  .queue.items-4{
+    gap: 0.5rem;
+  }
+  .queue.items-4 .item{
+    font-size: 4.5rem;
+    line-height: 5rem;
+  }
+}
+
+@media(max-width: 940px){
+  .queue.items-6 .item{
+    font-size: 2.5rem;
+    line-height: 3rem;
+  }
+}
+
+@media(max-width: 900px){
+  .queue.items-4 .item{
+    font-size: 4rem;
+    line-height: 4.5rem;
+  }
+}
+
+@media(max-width: 825px){
+  .queue.items-4 .item{
+    font-size: 3rem;
+    line-height: 3.5rem;
+  }
+}
+
+@media(max-width: 780px){
+  .queue.items-6 .item{
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+}
+
+
+
+
 @media(max-height: 800px) and (max-width: 1200px){
   .queue{
     gap: 0.5rem;
