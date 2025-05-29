@@ -199,4 +199,19 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   }
 }
 
+@media(max-height: 800px) and (max-width: 1200px){
+  .queue{
+    gap: 0.5rem;
+  }
+  .queue.items-6{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .queue .item{
+    padding: 0.5rem;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 3.5rem;
+  }
+}
+
 </style>
