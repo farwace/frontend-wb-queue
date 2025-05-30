@@ -111,6 +111,9 @@ const updateTablesCnt = async () => {
 }
 
 onMounted(() => {
+
+  document.querySelector('body')?.classList?.add?.('dark-mode');
+
   interval = setInterval(() => {
     currentTime.value = new Date()
   }, 1000)
@@ -126,6 +129,7 @@ onMounted(() => {
 onUnmounted(() => {
   echo.disconnect();
   clearInterval(interval);
+  document.querySelector('body')?.classList?.remove?.('dark-mode');
 })
 
 const formatDuration = (from: Date, to: Date): { strVal: string, val: number } => {
