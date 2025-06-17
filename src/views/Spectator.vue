@@ -33,7 +33,7 @@ declare global {
     Pusher?: typeof Pusher;
   }
 }
-const tablesCnt = ref<number>(4);
+const tablesCnt = ref<number>(1);
 
 const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e1';
 
@@ -153,7 +153,7 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
-.queue.items-6{
+.queue.items-5, .queue.items-6, .queue.items-7, .queue.items-8{
   grid-template-columns: 1fr 1fr 1fr;
 }
 .queue .item{
@@ -206,13 +206,13 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
 }
 
 @media(max-width: 1480px){
-  .queue.items-6{
+  .queue.items-5, .queue.items-6, .queue.items-7, .queue.items-8{
     gap: 0.5rem
   }
 }
 
 @media(max-width: 1420px){
-  .queue.items-6 .item{
+  .queue.items-5 .item, .queue.items-6 .item, .queue.items-7 .item, .queue.items-8 .item{
     padding: 0.5rem;
     font-size: 4rem;
     line-height: 4.5rem;
@@ -220,45 +220,45 @@ const formatDuration = (from: Date, to: Date): { strVal: string, val: number } =
 }
 
 @media(max-width: 1250px){
-  .queue.items-6 .item{
+  .queue.items-5 .item, .queue.items-6 .item, .queue.items-7 .item, .queue.items-8 .item{
     font-size: 3rem;
     line-height: 3.5rem;
   }
 }
 
 @media(max-width: 1000px){
-  .queue.items-4{
+  .queue.items-4, .queue.items-3, .queue.items-2, .queue.items-1{
     gap: 0.5rem;
   }
-  .queue.items-4 .item{
+  .queue.items-4 .item, .queue.items-3 .item, .queue.items-2 .item, .queue.items-1 .item{
     font-size: 4.5rem;
     line-height: 5rem;
   }
 }
 
 @media(max-width: 940px){
-  .queue.items-6 .item{
+  .queue.items-5 .item, .queue.items-6 .item, .queue.items-7 .item, .queue.items-8 .item{
     font-size: 2.5rem;
     line-height: 3rem;
   }
 }
 
 @media(max-width: 900px){
-  .queue.items-4 .item{
+  .queue.items-4 .item, .queue.items-3 .item, .queue.items-2 .item, .queue.items-1 .item{
     font-size: 4rem;
     line-height: 4.5rem;
   }
 }
 
 @media(max-width: 825px){
-  .queue.items-4 .item{
+  .queue.items-4 .item, .queue.items-3 .item, .queue.items-2 .item, .queue.items-1 .item {
     font-size: 3rem;
     line-height: 3.5rem;
   }
 }
 
 @media(max-width: 780px){
-  .queue.items-6 .item{
+  .queue.items-5 .item, .queue.items-6 .item, .queue.items-7 .item, .queue.items-8 .item{
     font-size: 2rem;
     line-height: 2.5rem;
   }
