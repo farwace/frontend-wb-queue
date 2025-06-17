@@ -60,11 +60,16 @@ const logout = async () => {
     localStorage.removeItem('badge')
     window.location.reload()
   }
-  catch (error) {
+  catch (error: any) {
     store.$patch({
       isLoading: false,
     });
-    store.showError(t('somethingWentWrong'));
+    if(error?.response?.data?.message){
+      store.showError(error?.response?.data?.message);
+    }
+    else{
+      store.showError(t('somethingWentWrong'));
+    }
   }
 }
 
