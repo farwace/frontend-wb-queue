@@ -27,6 +27,7 @@ export const useUserStore = defineStore('user', {
         inQueue: false,
         isLoading: false,
         isSpectatorMode: IS_SPECTATOR_ENABLED,
+        password: (localStorage.getItem('app-password') || undefined) as string | undefined,
     }),
     actions: {
         async checkAuth() {
@@ -129,18 +130,40 @@ export const useUserStore = defineStore('user', {
             })
             this.setLoading(false);
         },
+        async getParam(paramName: string) {
+            try {
+                this.setLoading(true);
+                const res = await axios.get(`${API_URL}/api/worker/v1.0/get-param/${paramName}`, {});
+                this.setLoading(false);
+                return res.data;
+            }
+            catch (e: any){
+                this.showError(e?.response?.data?.message, e?.response?.status);
+                this.setLoading(false);
+            }
+        },
         async getQueue(setLoading = true){
             try {
                 if(setLoading){
                     this.setLoading(true);
                 }
-                const res = await axios.get(`${API_URL}/api/worker/v1.0/queue/${DIRECTION_CODE}`, { })
+                const res = await axios.get(`${API_URL}/api/worker/v1.0/queue/${DIRECTION_CODE}`, {
+                    headers: {
+                        'Auth-string': this.password
+                    }
+                })
                 this.setLoading(false);
+                if(this.password){
+                    localStorage.setItem('app-password', this.password);
+                }
                 return res;
             }
             catch (e:any){
                 this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
+                if(e?.response?.status === 401){
+                    return null;
+                }
             }
         },
         async getTablesCnt(): Promise<AxiosResponse<number>> {

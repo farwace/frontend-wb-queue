@@ -2,7 +2,11 @@
   <div>
     <h2>Очередь столов</h2>
 
-    <div class="queue" :class="['items-' + tablesCnt]">
+    <div v-if="showPasswordForm">
+      <input v-model="password" type="password" :placeholder="'password'" />
+      <button @click="submitPassword">OK</button>
+    </div>
+    <div class="queue" :class="['items-' + tablesCnt]" v-else>
       <template v-for="(item, index) in items" :key="item.id">
         <div class="item" v-if="!item.isClosed && index < tablesCnt" :class="{flash: formatDuration(item.timestamp!, currentTime).val > 300}">
           <div class="item-bg" :style="{backgroundColor: item.color || ''}"></div>
@@ -68,6 +72,13 @@ let interval: ReturnType<typeof setInterval>
 const currentTime = ref(new Date())
 const items = ref<TQueue[]>([]);
 const isReady = ref<boolean>(false);
+const isPasswordRequired = ref<boolean | null>(null);
+const showPasswordForm = ref<boolean>(false);
+const password = ref<string>();
+const submitPassword = async () => {
+  store.password = password.value;
+  longPoolReload();
+}
 
 
 echo.channel('orders')
@@ -85,18 +96,35 @@ echo.channel('orders')
       }
     });
 
-const longPoolReload = (setLoading = true) => {
+const longPoolReload = async (setLoading = true) => {
+
+  if(isPasswordRequired.value === null){
+    isPasswordRequired.value = (await store.getParam('app.password-required') as unknown as boolean);
+  }
+
+  if(isPasswordRequired.value && !store.password){
+    showPasswordForm.value = true;
+    return;
+  }
+
   store.getQueue(setLoading).then((queue) => {
     items.value = [];
-    if((queue?.data?.data?.length || 0) > 0){
-      items.value = (queue?.data?.data as unknown as TQueue[]).map((item) => {
-        if(item.timestamp){
-          item.timestamp = new Date(item.timestamp);
-        }
-        return item;
-      })
+    if(queue === null){
+      showPasswordForm.value = true;
     }
-    isReady.value = true;
+    else{
+      showPasswordForm.value = false;
+
+      if((queue?.data?.data?.length || 0) > 0){
+        items.value = (queue?.data?.data as unknown as TQueue[]).map((item) => {
+          if(item.timestamp){
+            item.timestamp = new Date(item.timestamp);
+          }
+          return item;
+        })
+      }
+      isReady.value = true;
+    }
   });
 }
 
