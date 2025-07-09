@@ -8,6 +8,9 @@
         <div class="modal-text" v-if="message">
           {{ message }}
         </div>
+        <div class="modal-text">
+          <slot />
+        </div>
         <div class="modal-buttons">
           <button type="button" @click="emits('cancel')">{{ t('cancel') }}</button>
           <button type="button" @click="emits('accept')">{{t('apply')}}</button>

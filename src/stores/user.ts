@@ -7,7 +7,7 @@ import iziToast from "izitoast";
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost'
 const IS_SPECTATOR_ENABLED = import.meta.env.VITE_ENABLE_QUEUE == 'true'
-const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e1'
+const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e0'
 
 interface User {
     id: number
@@ -107,10 +107,10 @@ export const useUserStore = defineStore('user', {
                 this.setLoading(false);
             }
         },
-        async receiveItem() {
+        async receiveItem(formData: FormData) {
             try {
                 this.setLoading(true);
-                const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, { direction: DIRECTION_CODE }, {
+                const res = await axios.post(`${API_URL}/api/worker/v1.0/receive-item`, formData, {
                     headers: { 'badge-code': this.badgeCode },
                 })
                 this.setLoading(false);
@@ -123,9 +123,9 @@ export const useUserStore = defineStore('user', {
                 this.setLoading(false);
             }
         },
-        async logout(){
+        async logout(formData: FormData){
             this.setLoading(true);
-            const res = await axios.post(`${API_URL}/api/worker/v1.0/leave-table`, { direction: DIRECTION_CODE }, {
+            const res = await axios.post(`${API_URL}/api/worker/v1.0/leave-table`, formData, {
                 headers: { 'badge-code': this.badgeCode },
             })
             this.setLoading(false);

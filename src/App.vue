@@ -1,6 +1,8 @@
 <template>
   <div class="app">
-    <Confirm v-if="confirmLogout" :message="t('askLogout')" :title="t('logoutTitle')" @accept="logout" @cancel="confirmLogout = false"/>
+    <Confirm v-if="confirmLogout" :message="t('askLogout')" :title="t('logoutTitle')" @accept="logout" @cancel="confirmLogout = false">
+      <PhotoUploader v-model="photos" />
+    </Confirm>
     <div v-if="!isSpectatorMode">
       <select style="font-size: 1.5rem; text-transform: uppercase" @change="changeLang(($event?.target as any)?.value)">
         <option :value="locale" selected>{{ locale }}</option>
@@ -33,12 +35,15 @@ import Confirm from './components/Confirm.vue'
 import {storeToRefs} from "pinia";
 import LoadingSpinner from "@/components/icons/LoadingSpinner.vue";
 import {useI18n} from "vue-i18n";
+import PhotoUploader from "@/components/PhotoUploader.vue";
 
 const store = useUserStore()
 
 const confirmLogout = ref<boolean>(false);
 
 const { isAuthorized, user, inQueue, isSpectatorMode } = storeToRefs(useUserStore())
+const photos = ref<File[]>([]);
+const DIRECTION_CODE = import.meta.env.VITE_DIRECTION_CODE || 'e0'
 
 const currentComponent = computed(() => {
   if( isSpectatorMode.value) {return SpectatorView}
@@ -53,9 +58,13 @@ const tryLogout = () => {
 }
 
 const logout = async () => {
+  const formData = new FormData();
+  formData.append('direction', DIRECTION_CODE);
+  photos.value.forEach(file => formData.append('attachments[]', file));
+
   confirmLogout.value = false;
   try{
-    await store.logout();
+    await store.logout(formData);
     localStorage.removeItem('user')
     localStorage.removeItem('badge')
     window.location.reload()
