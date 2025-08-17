@@ -4,11 +4,11 @@
     <h2>{{store.$state.user?.table}} - {{t('productOnWay')}} 🏃‍➡️</h2>
 
     <input type="text" placeholder="Номер короба" v-model="message">
-    <PhotoUploader v-model="photos" />
+    <PhotoUploader v-if="store.$state.isPhotoRequired" v-model="photos" />
 
     <button :disabled="store.$state.isLoading" class="big-button" @click="onReceiveItem">✅ {{t('receivedProduct')}} ✅</button>
 
-    <div style="margin-top: 40px; display: flex; flex-direction: row; gap: 20px;">
+    <div v-if="store.$state.isPhotoRequired" style="margin-top: 40px; display: flex; flex-direction: row; gap: 20px;">
       <div>
         <img style="max-width: 200px; object-fit: contain" src="/img/example.png" alt="">
       </div>
@@ -26,7 +26,7 @@
 import { useUserStore } from '../stores/user'
 import {useI18n} from "vue-i18n";
 import PhotoUploader from "@/components/PhotoUploader.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 const store = useUserStore()
 
 const {t, locale} = useI18n();
@@ -42,4 +42,8 @@ const onReceiveItem = async () => {
   photos.value.forEach(file => formData.append('attachments[]', file));
   await store.receiveItem(formData);
 }
+
+onMounted(() => {
+  store.checkIsPhotoRequired();
+})
 </script>

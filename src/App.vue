@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Confirm v-if="confirmLogout" :message="t('askLogout')" :title="t('logoutTitle')" @accept="logout" @cancel="confirmLogout = false">
-      <PhotoUploader v-model="photos" />
+      <PhotoUploader v-if="store.$state.isPhotoRequired" v-model="photos" />
     </Confirm>
     <div v-if="!isSpectatorMode">
       <select style="font-size: 1.5rem; text-transform: uppercase" @change="changeLang(($event?.target as any)?.value)">

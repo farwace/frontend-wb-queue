@@ -16,6 +16,7 @@ interface User {
     department?: string
     table?: string
     inQueue?:boolean
+    isPhotoRequired?: boolean
     tables?: { id: number; name: string; code: string; worker_id?: number }[]
 }
 
@@ -28,6 +29,7 @@ export const useUserStore = defineStore('user', {
         isLoading: false,
         isSpectatorMode: IS_SPECTATOR_ENABLED,
         password: (localStorage.getItem('app-password') || undefined) as string | undefined,
+        isPhotoRequired: undefined,
     }),
     actions: {
         async checkAuth() {
@@ -105,6 +107,19 @@ export const useUserStore = defineStore('user', {
             catch (e: any){
                 this.showError(e?.response?.data?.message, e?.response?.status);
                 this.setLoading(false);
+            }
+        },
+        async checkIsPhotoRequired(){
+            if(typeof this.isPhotoRequired === 'undefined'){
+                try {
+                    const res = await axios.get(`${API_URL}/api/worker/v1.0/is-photo-required`, {
+                        headers: { 'badge-code': this.badgeCode },
+                    });
+                    this.isPhotoRequired = !!res?.data?.data;
+                }
+                catch (e: any){
+                    this.isPhotoRequired = true;
+                }
             }
         },
         async receiveItem(formData: FormData) {
