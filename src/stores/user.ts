@@ -29,7 +29,7 @@ export const useUserStore = defineStore('user', {
         isLoading: false,
         isSpectatorMode: IS_SPECTATOR_ENABLED,
         password: (localStorage.getItem('app-password') || undefined) as string | undefined,
-        isPhotoRequired: undefined,
+        isPhotoRequired: undefined as undefined | boolean,
     }),
     actions: {
         async checkAuth() {
